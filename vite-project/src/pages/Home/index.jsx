@@ -1,12 +1,39 @@
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-import Categories from '../../components/Categories'
+import Categories from "../../components/Categories";
+import Card from "../../components/Card";
 
 export default function Page() {
-    return (
-        <div>
-            <Categories/>
+  const [selectedBtn, setSelectedBtn] = useState("");
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    async function loadProducts() {
+      const data = await getProducts();
+
+      setProducts(data.slice(0, 8));
+    }
+
+    loadProducts();
+  }, []);
+
+  return (
+    <>
+      <div>
+        <Categories selectedBtn={selectedBtn} onSelect={setSelectedBtn} />
+        <div className="cards-container">
+          {products.map((item) => (
+            <Card
+              name={item.title}
+              image={item.image}
+              category={item.category}
+              description={item.description}
+              price = {item.price}
+            />
+          ))}
         </div>
-    )
+      </div>
+    </>
+  );
 }
